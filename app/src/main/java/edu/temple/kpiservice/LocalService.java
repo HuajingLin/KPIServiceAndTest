@@ -106,7 +106,7 @@ public class LocalService extends Service {
     }
 
     //Returns the public key associated with the provided partner name
-    String getPublicKey(String partnerName)
+    RSAPublicKey getPublicKey(String partnerName)
             throws IllegalBlockSizeException,
             InvalidKeyException,
             BadPaddingException,
@@ -121,9 +121,11 @@ public class LocalService extends Service {
             System.out.printf("========= getPublicKey %s, by partner name: %s \n", publicKeyString, "partner-1");
             return null;
         }
-        return publicKeyString;
 
-        //rsaPublicKey = (RSAPublicKey)stringToPublicKey( publicKeyString);
+        System.out.printf("========= getPublicKey by partner name: %s \n", "partner-1");
+        RSAPublicKey rsaPublicKey = (RSAPublicKey)stringToPublicKey( publicKeyString);
+
+        return rsaPublicKey;
 
         //if(publicKey == null)
         //    System.out.printf("========= getPublicKey: converting fail.(%s)\n",publicKeyString);
@@ -154,9 +156,7 @@ public class LocalService extends Service {
             BadPaddingException {
 
         try {
-            System.out.printf("========= test1111: %s\n",publicKeyString);
             byte[] keyBytes = Base64.decode(publicKeyString, Base64.DEFAULT);
-            System.out.printf("========= test2222: %s\n",publicKeyString);
             X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             PublicKey publicKey = keyFactory.generatePublic(pubKeySpec);

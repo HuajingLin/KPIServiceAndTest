@@ -81,10 +81,17 @@ public class ExampleInstrumentedTest {
                     RSAPrivateKey privateKey = (RSAPrivateKey) keys.getPrivate();
                     RSAPublicKey publicKey = (RSAPublicKey) keys.getPublic();
 
-                    String privateKeyString = privateKey.getPrivateExponent().toString();
-                    String publicKeyString = publicKey.getPublicExponent().toString();
-                    System.out.printf("1========= private Key:\n\t %s \n",privateKeyString);
-                    System.out.printf("1========= public Key:\n\t %s \n",publicKeyString);
+                    //String privateKeyString = privateKey.getPrivateExponent().toString();
+                    //String publicKeyString = publicKey.getPublicExponent().toString();
+
+                    byte[] privateKeyBytes = Base64.encode(keys.getPrivate().getEncoded(),0);
+                    String priKey = new String(privateKeyBytes);
+
+                    byte[] publicKeyBytes = Base64.encode(keys.getPublic().getEncoded(),0);
+                    String pubKey = new String(publicKeyBytes);
+
+                    System.out.printf("1========= private Key:\n\t %s \n",priKey);
+                    System.out.printf("1========= public Key:\n\t %s \n",pubKey);
 
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
@@ -159,10 +166,10 @@ public class ExampleInstrumentedTest {
                 publicKey = (RSAPublicKey) keys.getPublic();
 
                 System.out.printf("2========= encrypted And Decrypted Text\n");
-                String privateKeyString = privateKey.getPrivateExponent().toString();
-                String publicKeyString = publicKey.getPublicExponent().toString();
-                System.out.printf("2========= private Key:\n\t %s \n",privateKeyString);
-                System.out.printf("2========= public Key:\n\t %s \n",publicKeyString);
+                //String privateKeyString = privateKey.getPrivateExponent().toString();
+                //String publicKeyString = publicKey.getPublicExponent().toString();
+                //System.out.printf("2========= private Key:\n\t %s \n",privateKeyString);
+                //System.out.printf("2========= public Key:\n\t %s \n",publicKeyString);
 
                 try {
                     cipher.init(Cipher.ENCRYPT_MODE, privateKey);
@@ -223,10 +230,14 @@ public class ExampleInstrumentedTest {
                     RSAPrivateKey privateKey = (RSAPrivateKey) keys.getPrivate();
                     RSAPublicKey publicKey = (RSAPublicKey) keys.getPublic();
 
-                    String privateKeyString = privateKey.getPrivateExponent().toString();
-                    String publicKeyString = publicKey.getPublicExponent().toString();
-                    System.out.printf("3========= private Key:\n\t %s \n",privateKeyString);
-                    System.out.printf("3========= public Key:\n\t %s \n",publicKeyString);
+                    byte[] privateKeyBytes = Base64.encode(keys.getPrivate().getEncoded(),0);
+                    String priKey = new String(privateKeyBytes);
+
+                    byte[] publicKeyBytes = Base64.encode(keys.getPublic().getEncoded(),0);
+                    String pubKey = new String(publicKeyBytes);
+
+                    System.out.printf("3========= private Key:\n\t %s \n",priKey);
+                    System.out.printf("3========= public Key:\n\t %s \n",pubKey);
 
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
@@ -242,8 +253,6 @@ public class ExampleInstrumentedTest {
 
             @Override
             public void onServiceDisconnected(ComponentName arg0) {
-                //mBound = false;
-                System.out.printf("========= onServiceDisconnected\n");
             }
         };
 
@@ -268,10 +277,16 @@ public class ExampleInstrumentedTest {
                 LocalService mService = binder.getService();
 
                 System.out.printf("4========= test: test_store_key_by_partnerName\n");
+                String publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzi1P18ldTgeRs3TJQqfNNrPpt08li3Ke" +
+                        "yyMRcttd3+FKRcIYp0Hcyy+c8L8KxVNBxIRidAcILLeBDU6QPArDjW7RYhk5N09q6w2YhqAkm7S8" +
+                        "KSVL6yarT0v/IOTCZZt8Z5NpUPAwK8Rw0+A/aSNZdwDfsXlJcFP8jxicHjCYXRHEWLlMKix7w425" +
+                        "6vEH4NvfT227zoFBheFLyL5nVmhPEcYhmsO5ApXRoV6YLmeYqdWAZ9Rc5473vAxBWOebQ9cWHg+t" +
+                        "lmdYO2RT/Kf4lyAUQ/4wb2x8usEUwaS6yAp6Foi9jxwYaQCeNVcR9E2X86UdFjysYN6LXW1qt+Ep" +
+                        "VzFtJwIDAQAB";
                 try {
-                    mService.storePublicKey("partner-1", "publiceKey-001");
+                    mService.storePublicKey("partner-1", publicKey);
                     System.out.printf("4========= partner name:\n\t %s \n","partner-1");
-                    System.out.printf("4========= publice key:\n\t %s \n","publiceKey-001");
+                    System.out.printf("4========= publice key:\n\t %s \n",publicKey);
 
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
@@ -315,15 +330,17 @@ public class ExampleInstrumentedTest {
                 // We've bound to LocalService, cast the IBinder and get LocalService instance
                 LocalService.LocalBinder binder = (LocalService.LocalBinder) service;
                 LocalService mService = binder.getService();
-                String publicKey = "";
-                System.out.printf("5========= test: test_retrieved_key_by_partnerName\n");
+                RSAPublicKey publicKey = null;
+                System.out.printf("5========= test: test_retrieved_key_by_partnerName 333\n");
+
                 try {
-                    //RSAPublicKey publicKey = mService.getPublicKey("partner-1");
                     publicKey = mService.getPublicKey("partner-1");
+                    byte[] publicKeyBytes = Base64.encode(publicKey.getEncoded(),0);
+                    String pubKey = new String(publicKeyBytes);
 
                     //String strPublicKey = publicKey.getPublicExponent().toString();
                     System.out.printf("5========= partner name:\n\t %s \n","partner-1");
-                    System.out.printf("5========= publice key:\n\t %s \n",publicKey);
+                    System.out.printf("5========= publice key:\n\t %s \n",pubKey);
 
                 } catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
@@ -340,7 +357,7 @@ public class ExampleInstrumentedTest {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                assertEquals(publicKey, "publiceKey-001");
+                assertNotNull(publicKey);
             }
 
             @Override
