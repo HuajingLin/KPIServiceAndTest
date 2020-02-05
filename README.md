@@ -5,7 +5,8 @@ The service supports key operations using the Rivest, Shamir, Aldeman (RSA) algo
 
 ### KeyPair getMyKeyPair() - Generate and/or retrieve a user’s RSA KeyPair. 
 The first call to this method will generate and store the keypair before returning it. Subsequent calls will return the
-same key pair.
+same key pair. I changed the KeyPair object to string and saved it. I changed the string to KeyPair object when I retrieved.
+
 ### void storePublicKey (String partnerName, String publicKey) – Store a key for a provided partner name
 
 ### RSAPublicKey getPublicKey(String partnerName) – Returns the public key associated with the provided partner name
